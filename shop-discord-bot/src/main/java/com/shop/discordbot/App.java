@@ -3,6 +3,7 @@ package com.shop.discordbot;
 import com.shop.discordbot.commands.Command;
 import com.shop.discordbot.commands.CommandInitializer;
 import com.shop.discordbot.commands.CommandOption;
+import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.listeners.message.MessageReceivedListener;
 import com.shop.discordbot.listeners.interaction.SlashCommandInteractionListener;
 import net.dv8tion.jda.api.JDA;
@@ -13,6 +14,8 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+
+import java.io.IOException;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
@@ -33,6 +36,7 @@ public class App {
             CommandListUpdateAction commands = jda.updateCommands();
 
             CommandInitializer.initializeCommands();
+            FirebaseManager.initialize();
 
             // this is from Carol (my other project)
             // repository here: https://github.com/MarcelloDev6001/CarolBot
@@ -68,6 +72,8 @@ public class App {
         catch (InterruptedException e)
         {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
