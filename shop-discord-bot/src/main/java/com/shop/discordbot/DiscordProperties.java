@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import java.util.EnumSet;
 
 public class DiscordProperties {
-    public static String token = System.getenv("SHOP_DISCORD_BOT_TOKEN");
+    public static String token = System.getenv("SHOP_DISCORD_TOKEN");
     public static EnumSet<GatewayIntent> intents = EnumSet.of(
             // Enables MessageReceivedEvent for guild (also known as servers)
             GatewayIntent.GUILD_MESSAGES,

@@ -1,18 +1,18 @@
 package com.shop.discordbot;
 
-import com.shop.discordbot.listeners.MessageListener;
-import com.shop.discordbot.listeners.SlashCommandListener;
+import com.shop.discordbot.commands.Command;
+import com.shop.discordbot.commands.CommandInitializer;
+import com.shop.discordbot.commands.CommandOption;
+import com.shop.discordbot.listeners.message.MessageReceivedListener;
+import com.shop.discordbot.listeners.interaction.SlashCommandInteractionListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-
-import java.util.EnumSet;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
 
@@ -21,8 +21,8 @@ public class App {
         try
         {
             JDA jda = JDABuilder.createLight(DiscordProperties.token, DiscordProperties.intents)
-                    .addEventListeners(new MessageListener())
-                    .addEventListeners(new SlashCommandListener())
+                    .addEventListeners(new MessageReceivedListener())
+                    .addEventListeners(new SlashCommandInteractionListener())
                     .setActivity(Activity.watching("your messages"))
                     .build();
 
@@ -32,13 +32,32 @@ public class App {
 
             CommandListUpdateAction commands = jda.updateCommands();
 
-            commands.addCommands(
-                    Commands.slash("say", "Makes the bot say what you tell it to")
-                            .addOption(STRING, "content", "What the bot should say", true), // Accepting a user input
-                    Commands.slash("leave", "Makes the bot leave the server")
-                            .setContexts(InteractionContextType.GUILD) // this doesn't make sense in DMs
-                            .setDefaultPermissions(DefaultMemberPermissions.DISABLED) // only admins should be able to use this command.
-            );
+            CommandInitializer.initializeCommands();
+
+            // this is from Carol (my other project)
+            // repository here: https://github.com/MarcelloDev6001/CarolBot
+            for (Command command : Command.allCommands)
+            {
+                SlashCommandData slashCommand = Commands.slash(command.getName(), command.getDescription());
+                // slashCommand.setGuildOnly(command.getGuildOnly());
+
+                if (command.getOptions() != null)
+                {
+                    for (CommandOption optionOnCommand : command.getOptions())
+                    {
+                        SlashCommandData newOption = slashCommand.addOption(
+                                optionOnCommand.getOptionType(),
+                                optionOnCommand.getName(),
+                                optionOnCommand.getDescription(),
+                                optionOnCommand.getRequired(),
+                                optionOnCommand.getAutoComplete() != null && !optionOnCommand.getAutoComplete().isEmpty()
+                        );
+                    }
+                }
+
+                commands.addCommands(slashCommand);
+                System.out.println("Command Loaded to Discord: " + slashCommand.getName());
+            }
 
             commands.queue();
 
