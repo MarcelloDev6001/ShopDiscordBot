@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09a783e1-e907-4baa-a5cf-98660207aa10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/Purchase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/PurchaseItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/PurchaseStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/FirebaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/FirebaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/Tables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/Tables.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/guild/Guild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/guild/Guild.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/Purchase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/listeners/message/MessageReceivedListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/listeners/message/MessageReceivedListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,20 +45,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Download Sources.executor": "Run",
-    "Gradle.shop-discord-bot [:com.shop.discordbot.App.main()].executor": "Run",
-    "Gradle.shop-discord-bot [:com.shop.discordbot.Main.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "onboarding.tips.debug.path": "F:/Github/ShopDiscordBot/shop-discord-bot/src/main/java/com/shop/discordbot/Main.java",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.shop-discord-bot [:com.shop.discordbot.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.shop-discord-bot [:com.shop.discordbot.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;F:/Github/ShopDiscordBot/shop-discord-bot/src/main/java/com/shop/discordbot/Main.java&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Shop" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="24" />

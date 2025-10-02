@@ -7,6 +7,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.shop.discordbot.database.entities.guild.Guild;
+import com.shop.discordbot.database.entities.purchase.Purchase;
 import com.shop.discordbot.database.entities.user.User;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,5 +103,22 @@ public class FirebaseManager {
 
     public static void updateGuild(long id, Guild guild) {
         addOrUpdateEntity(Tables.GUILDS_TABLE, String.valueOf(id), guild);
+    }
+
+    // ---------- Purchases wrappers ----------
+    public static Purchase getPurchaseFromDatabase(long id) {
+        return getEntity(Tables.PURCHASES_TABLE, String.valueOf(id), Purchase.class);
+    }
+
+    public static void addPurchaseToDatabase(Purchase purchase) {
+        addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(purchase.getId()), purchase);
+    }
+
+    public static Purchase getOrCreatePurchase(long id, long buyerId) {
+        return getOrCreateEntity(Tables.GUILDS_TABLE, String.valueOf(id), Purchase.class, Purchase.getDefault(id, buyerId));
+    }
+
+    public static void updatePurchase(long id, Purchase purchase) {
+        addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(id), purchase);
     }
 }
