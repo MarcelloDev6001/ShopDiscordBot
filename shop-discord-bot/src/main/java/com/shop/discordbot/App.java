@@ -4,6 +4,7 @@ import com.shop.discordbot.commands.Command;
 import com.shop.discordbot.commands.CommandInitializer;
 import com.shop.discordbot.commands.CommandOption;
 import com.shop.discordbot.database.FirebaseManager;
+import com.shop.discordbot.listeners.ListenersLoader;
 import com.shop.discordbot.listeners.message.MessageReceivedListener;
 import com.shop.discordbot.listeners.interaction.SlashCommandInteractionListener;
 import net.dv8tion.jda.api.JDA;
@@ -38,11 +39,14 @@ public class App {
             CommandInitializer.initializeCommands();
             FirebaseManager.initialize();
 
+            ListenersLoader.initListeners(jda);
+
             // this is from Carol (my other project)
             // repository here: https://github.com/MarcelloDev6001/CarolBot
             for (Command command : Command.allCommands)
             {
                 SlashCommandData slashCommand = Commands.slash(command.getName(), command.getDescription());
+                slashCommand.setDefaultPermissions(DefaultMemberPermissions.enabledFor(command.getPermissionsRequired()));
                 // slashCommand.setGuildOnly(command.getGuildOnly());
 
                 if (command.getOptions() != null)

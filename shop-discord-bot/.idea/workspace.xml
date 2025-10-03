@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09a783e1-e907-4baa-a5cf-98660207aa10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/PurchaseStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/commands/category/CategoryManagementCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/listeners/ListenersLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/shop/CategoriesManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/FirebaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/FirebaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/Tables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/Tables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/guild/Guild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/guild/Guild.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/purchase/Purchase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/listeners/message/MessageReceivedListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/listeners/message/MessageReceivedListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/commands/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/shop/ShopCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shop/discordbot/database/entities/shop/ShopCategory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +59,12 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Github\ShopDiscordBot\shop-discord-bot\src\main\java\com\shop\discordbot\listeners\message" />
+      <recent name="F:\Github\ShopDiscordBot\shop-discord-bot\src\main\java\com\shop\discordbot" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Shop" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="24" />

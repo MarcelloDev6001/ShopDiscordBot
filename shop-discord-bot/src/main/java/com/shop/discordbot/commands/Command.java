@@ -1,5 +1,6 @@
 package com.shop.discordbot.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,8 @@ public abstract class Command {
     public static final List<Command> allCommands = new ArrayList<>();
     private static SlashCommandInteraction interaction;
 
+    private List<Permission> permissionsRequired = new ArrayList<>();
+
     public Command(@NotNull String name, String description) {
         this.name = name;
         this.description = description;
@@ -37,6 +40,14 @@ public abstract class Command {
                 break;
             }
         }
+    }
+
+    public List<Permission> getPermissionsRequired() {
+        return permissionsRequired;
+    }
+
+    public void setPermissionsRequired(List<Permission> permissionsRequired) {
+        this.permissionsRequired = permissionsRequired;
     }
 
     public void setInteraction(SlashCommandInteraction newInteraction)
