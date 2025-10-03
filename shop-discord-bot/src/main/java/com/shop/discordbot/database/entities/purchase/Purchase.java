@@ -9,15 +9,17 @@ import java.util.List;
 public class Purchase {
     private long id = 0L;
     private long buyerID = 0L;
+    private long sellerGuildOwnerID = 0L;
     private PurchaseStatus status = PurchaseStatus.PENDING;
     private List<PurchaseItem> items = new ArrayList<>();
     private Timestamp purchaseDate = null;
 
-    public static Purchase getDefault(long id, long buyerID)
+    public static Purchase getDefault(long id, long buyerID, long sellerGuildOwnerID)
     {
         Purchase defaultPurchase = new Purchase();
         defaultPurchase.setId(id);
         defaultPurchase.setBuyerID(buyerID);
+        defaultPurchase.setSellerGuildOwnerID(sellerGuildOwnerID);
         defaultPurchase.setStatus(PurchaseStatus.PENDING);
         defaultPurchase.setItems(new ArrayList<>());
         defaultPurchase.setPurchaseDate(Timestamp.now());
@@ -102,5 +104,13 @@ public class Purchase {
         } catch (Exception e) {
             return PurchaseUpdateStatus.FAIL;
         }
+    }
+
+    public long getSellerGuildOwnerID() {
+        return sellerGuildOwnerID;
+    }
+
+    public void setSellerGuildOwnerID(long sellerGuildOwnerID) {
+        this.sellerGuildOwnerID = sellerGuildOwnerID;
     }
 }
