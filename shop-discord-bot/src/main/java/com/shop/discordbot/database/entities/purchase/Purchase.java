@@ -1,7 +1,7 @@
 package com.shop.discordbot.database.entities.purchase;
 
 import com.google.cloud.Timestamp;
-import com.shop.discordbot.database.entities.guild.Guild;
+import com.shop.discordbot.database.FirebaseManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,20 @@ public class Purchase {
         this.items = items;
     }
 
+    public void addItem(PurchaseItem item)
+    {
+        items.add(item);
+    }
+
+    public void addItem(long id, String name, String details)
+    {
+        PurchaseItem newItem = new PurchaseItem();
+        newItem.setId(id);
+        newItem.setName(name);
+        newItem.setDetails(details);
+        items.add(newItem);
+    }
+
     public Timestamp getPurchaseDate() {
         return purchaseDate;
     }
@@ -62,5 +76,31 @@ public class Purchase {
 
     public void setStatus(PurchaseStatus status) {
         this.status = status;
+    }
+
+    public void markAsCompleted()
+    {
+        if (getStatus() == PurchaseStatus.CANCELLED)
+        {
+            System.out.println("Cannot complete a Purchase that was cancelled");
+            return;
+        }
+        if (getStatus() == PurchaseStatus.COMPLETED)
+        {
+            System.out.println("Purchase " + getId() + " is already completed");
+            return;
+        }
+        setStatus(PurchaseStatus.COMPLETED);
+        update();
+    }
+
+    public PurchaseUpdateStatus update()
+    {
+        try {
+            FirebaseManager.updatePurchase(this.id, this);
+            return PurchaseUpdateStatus.SUCCESS;
+        } catch (Exception e) {
+            return PurchaseUpdateStatus.FAIL;
+        }
     }
 }

@@ -5,6 +5,10 @@ public class PurchaseItem {
     private String name = "";
     private String details = "";
 
+    // this here will be visible to the buyer ONCE he completes the purchase.
+    // ex: this item is a roblox account, then the secret details will be the username and the password for this roblox account
+    private String secretDetails = "";
+
     public long getId() {
         return id;
     }
@@ -27,5 +31,13 @@ public class PurchaseItem {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getSecretDetails() {
+        return secretDetails;
+    }
+
+    public void setSecretDetails(String secretDetails) {
+        this.secretDetails = secretDetails;
     }
 }
