@@ -3,6 +3,9 @@ package com.shop.discordbot.database.entities.purchase;
 import com.google.cloud.Timestamp;
 import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.purchase.exceptions.ItemNotFound;
+import com.shop.discordbot.database.entities.purchase.exceptions.PurchaseAlreadyCompleted;
+import com.shop.discordbot.database.entities.purchase.exceptions.PurchaseCancelledOrRefunded;
+import com.shop.discordbot.database.entities.purchase.exceptions.PurchaseNotConfirmed;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -117,17 +120,15 @@ public class Purchase {
     {
         if (getStatus() == PurchaseStatus.CANCELLED || getStatus() == PurchaseStatus.REFUNDED)
         {
-            System.out.println("Cannot complete a Purchase that was cancelled/refunded");
-            return;
+            throw new PurchaseCancelledOrRefunded("Cannot complete a Purchase that was cancelled/refunded");
         }
         if (getStatus() == PurchaseStatus.COMPLETED)
         {
-            System.out.println("Purchase " + getId() + " is already completed");
-            return;
+            throw new PurchaseAlreadyCompleted("Purchase " + getId() + " is already completed");
         }
         if (getStatus() == PurchaseStatus.NEED_CONFIRMATION)
         {
-            System.out.println("Purchase " + getId() + " needs confirmation before can be completed");
+            throw new PurchaseNotConfirmed("Purchase " + getId() + " needs confirmation before can be completed");
         }
         setStatus(PurchaseStatus.COMPLETED);
         updateOnFirestore();
