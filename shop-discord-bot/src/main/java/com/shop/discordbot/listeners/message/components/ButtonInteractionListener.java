@@ -19,5 +19,6 @@ public class ButtonInteractionListener extends ListenerAdapter {
         }
 
         event.reply("This button had lost his Interaction data!\nCreate a new Interaction to use this button again").setEphemeral(true).queue();
+        super.onButtonInteraction(event);
     }
 }

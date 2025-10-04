@@ -114,8 +114,8 @@ public class FirebaseManager {
         addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(purchase.getId()), purchase);
     }
 
-    public static Purchase getOrCreatePurchase(long id, long buyerId) {
-        return getOrCreateEntity(Tables.GUILDS_TABLE, String.valueOf(id), Purchase.class, Purchase.getDefault(id, buyerId));
+    public static Purchase getOrCreatePurchase(long id, long buyerId, long sellerGuildOwnerId) {
+        return getOrCreateEntity(Tables.GUILDS_TABLE, String.valueOf(id), Purchase.class, Purchase.getDefault(id, buyerId, sellerGuildOwnerId));
     }
 
     public static void updatePurchase(long id, Purchase purchase) {
