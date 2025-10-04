@@ -2,8 +2,13 @@ package com.shop.discordbot.database.entities.purchase;
 
 import com.google.cloud.Timestamp;
 import com.shop.discordbot.database.FirebaseManager;
+import com.shop.discordbot.database.entities.purchase.exceptions.ItemNotFound;
+import com.shop.discordbot.database.entities.shop.ShopCategory;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 public class Purchase {
@@ -15,16 +20,43 @@ public class Purchase {
     private List<PurchaseItem> items = new ArrayList<>();
     private Timestamp purchaseDate = null;
 
-    public static Purchase getDefault(long id, long buyerID, long sellerGuildOwnerID)
+    public Purchase(long id, long buyerID, Guild guild, List<Long> itemsIDs, boolean needConfirmation)
     {
-        Purchase defaultPurchase = new Purchase();
-        defaultPurchase.setId(id);
-        defaultPurchase.setBuyerID(buyerID);
-        defaultPurchase.setSellerGuildOwnerID(sellerGuildOwnerID);
-        defaultPurchase.setStatus(PurchaseStatus.PENDING);
-        defaultPurchase.setItems(new ArrayList<>());
-        defaultPurchase.setPurchaseDate(Timestamp.now());
-        return defaultPurchase;
+        this.id = id;
+        this.buyerID = buyerID;
+        this.sellerGuildOwnerID = guild.getOwnerIdLong();
+
+        List<Long> itemsFound = new ArrayList<>();
+
+        if (needConfirmation) { status = PurchaseStatus.NEED_CONFIRMATION; }
+
+        for (ShopCategory category : FirebaseManager.getOrCreateGuild(guild.getIdLong()).getCategories())
+        {
+            for (PurchaseItem item : category.getItems())
+            {
+                if (itemsIDs.contains(item.getId())) {
+                    itemsFound.add(item.getId());
+                }
+            }
+        }
+
+        // we can use any type of sort here, what matter is they are equals and on the same order to check
+        itemsIDs.sort(Comparator.reverseOrder());
+        itemsFound.sort(Comparator.reverseOrder());
+
+        for (int i = 0; i < itemsIDs.size(); i++)
+        {
+            if (!itemsIDs.get(i).equals(itemsFound.get(i)))
+            {
+                throw new ItemNotFound(
+                        itemsIDs.get(i),
+                        "Item not found: " + itemsIDs.get(i)
+                );
+            }
+        }
+
+        this.purchaseDate = Timestamp.now();
+        updateOnFirestore();
     }
 
     public long getId() {
@@ -83,9 +115,9 @@ public class Purchase {
 
     public void markAsCompleted()
     {
-        if (getStatus() == PurchaseStatus.CANCELLED)
+        if (getStatus() == PurchaseStatus.CANCELLED || getStatus() == PurchaseStatus.REFUNDED)
         {
-            System.out.println("Cannot complete a Purchase that was cancelled");
+            System.out.println("Cannot complete a Purchase that was cancelled/refunded");
             return;
         }
         if (getStatus() == PurchaseStatus.COMPLETED)
@@ -93,8 +125,28 @@ public class Purchase {
             System.out.println("Purchase " + getId() + " is already completed");
             return;
         }
+        if (getStatus() == PurchaseStatus.NEED_CONFIRMATION)
+        {
+            System.out.println("Purchase " + getId() + " needs confirmation before can be completed");
+        }
         setStatus(PurchaseStatus.COMPLETED);
         updateOnFirestore();
+    }
+
+    public PurchaseCreateStatus createOnFirestore()
+    {
+        Purchase purchase = FirebaseManager.getPurchaseFromDatabase(this.id);
+        if (purchase != null)
+        {
+            return PurchaseCreateStatus.ALREADY_EXIST;
+        }
+
+        try {
+            FirebaseManager.updatePurchase(this.id, this);
+            return PurchaseCreateStatus.SUCCESS;
+        } catch (Exception _) {
+            return PurchaseCreateStatus.FAIL;
+        }
     }
 
     public PurchaseUpdateStatus updateOnFirestore()

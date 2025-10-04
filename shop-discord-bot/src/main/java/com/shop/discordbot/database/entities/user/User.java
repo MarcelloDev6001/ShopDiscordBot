@@ -40,6 +40,7 @@ public class User {
         cartItemsIDs.add(itemID);
         updateToFirestore();
     }
+
     public void removeItemOfCart(Long itemID)
     {
         if (cartItemsIDs.contains(itemID))
@@ -47,6 +48,11 @@ public class User {
             cartItemsIDs.remove(itemID);
             updateToFirestore();
         }
+    }
+
+    public void finishCart(long guildOwnerId)
+    {
+
     }
 
     public void clearCart()
