@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Purchase {
     private long id = 0L;
+    private String title = "";
     private long buyerID = 0L;
     private long sellerGuildOwnerID = 0L;
     private PurchaseStatus status = PurchaseStatus.PENDING;
@@ -112,5 +113,13 @@ public class Purchase {
 
     public void setSellerGuildOwnerID(long sellerGuildOwnerID) {
         this.sellerGuildOwnerID = sellerGuildOwnerID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

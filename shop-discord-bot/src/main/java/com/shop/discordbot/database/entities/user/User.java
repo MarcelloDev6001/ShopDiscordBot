@@ -1,11 +1,13 @@
 package com.shop.discordbot.database.entities.user;
 
+import com.shop.discordbot.database.FirebaseManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
     private long id = 0L;
-    private List<String> cartItemsIDs = new ArrayList<>();
+    private List<Long> cartItemsIDs = new ArrayList<>();
 
     public User() {}
 
@@ -24,16 +26,42 @@ public class User {
         this.id = id;
     }
 
-    public List<String> getCartItemsIDs() {
+    public List<Long> getCartItemsIDs() {
         return cartItemsIDs;
     }
 
-    public void setCartItemsIDs(List<String> cartItemsIDs) {
+    public void setCartItemsIDs(List<Long> cartItemsIDs) {
         this.cartItemsIDs = cartItemsIDs;
+        updateToFirestore();
     }
 
-    public void addItemToCart(String itemID)
+    public void addItemToCart(Long itemID)
     {
         cartItemsIDs.add(itemID);
+        updateToFirestore();
+    }
+    public void removeItemOfCart(Long itemID)
+    {
+        if (cartItemsIDs.contains(itemID))
+        {
+            cartItemsIDs.remove(itemID);
+            updateToFirestore();
+        }
+    }
+
+    public void clearCart()
+    {
+        cartItemsIDs.clear();
+        updateToFirestore();
+    }
+
+    public UpdateUserStatus updateToFirestore()
+    {
+        try {
+            FirebaseManager.updateUser(getId(), this);
+            return UpdateUserStatus.SUCCESS;
+        } catch (Exception e) {
+            return UpdateUserStatus.FAIL;
+        }
     }
 }

@@ -12,6 +12,8 @@ import com.shop.discordbot.database.entities.user.User;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 // i admit, this was made by me but i used ChatGPT to optimize this a LOT
@@ -120,5 +122,25 @@ public class FirebaseManager {
 
     public static void updatePurchase(long id, Purchase purchase) {
         addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(id), purchase);
+    }
+
+    public static List<Purchase> getPurchasesWhere(String field, Object value) {
+        List<Purchase> purchases = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = db.collection(Tables.PURCHASES_TABLE)
+                    .whereEqualTo(field, value)
+                    .get();
+
+            for (DocumentSnapshot doc : future.get().getDocuments()) {
+                Purchase purchase = doc.toObject(Purchase.class);
+                if (purchase != null) {
+                    purchases.add(purchase);
+                }
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return purchases;
     }
 }
