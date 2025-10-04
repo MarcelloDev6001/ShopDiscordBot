@@ -2,12 +2,14 @@ package com.shop.discordbot.commands.category;
 
 import com.shop.discordbot.commands.Command;
 import com.shop.discordbot.commands.objects.categorymanagement.CreateCategoryModal;
+import com.shop.discordbot.commands.objects.categorymanagement.UpdateCategoryModal;
 import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.guild.Guild;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 import com.shop.discordbot.messages.components.button.MessageButton;
 import com.shop.discordbot.shop.CategoriesManager;
 import com.shop.discordbot.shop.exceptions.CategoryAlreadyExist;
+import com.shop.discordbot.shop.exceptions.CategoryNotFound;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -56,7 +58,38 @@ public class CategoryManagementCommand extends Command {
         ).queue();
     }
 
-    private void manageCategories(ButtonInteraction interaction, User user) {}
+    private void handleUpdateCategory(ModalInteraction interaction, User user)
+    {
+        try {
+            String categoryName = interaction.getValue("category_selected").getAsString();
+            String name = interaction.getValue("name_input").getAsString();
+            String description = interaction.getValue("description_input").getAsString();
+
+            try {
+                CategoriesManager.updateCategoryOfGuild(interaction.getGuild(), categoryName, name, description);
+                interaction.reply("Category `" + categoryName + "` updated successfully (now it's `" + name + "`)").setEphemeral(true).queue();
+            } catch (CategoryNotFound e) {
+                interaction.reply("Error: category `" + categoryName + "` not found!").setEphemeral(true).queue();
+            }
+            interaction.reply("Category `" + name + "` updated successfully!").setEphemeral(true).queue();
+        } catch (Exception e) {
+            interaction.reply("Unknown Error: " + e).setEphemeral(true).queue();
+        }
+    }
+
+    private void updateCategory(ButtonInteraction interaction, User user) {
+        if (CategoriesManager.getCategoriesOfGuild(interaction.getGuild()).isEmpty())
+        {
+            interaction.reply("Error: This Guild doesn't have any category!")
+                    .setEphemeral(true).queue();
+
+            return;
+        }
+        interaction.replyModal(
+                UpdateCategoryModal.create("create_category_modal_" + interaction.getId(),
+                        CategoriesManager.getCategoriesOfGuild(interaction.getGuild()), this::handleUpdateCategory)
+        ).queue();
+    }
 
     private void deleteCategory(ButtonInteraction interaction, User user) {}
 
@@ -78,9 +111,9 @@ public class CategoryManagementCommand extends Command {
 
         MessageButton manageCategoriesButton = new MessageButton(
                 ButtonStyle.SECONDARY,
-                "manage_category_" + interaction.getId(),
-                "Manage Category",
-                this::manageCategories,
+                "update_category_" + interaction.getId(),
+                "Update Category",
+                this::updateCategory,
                 ""
         );
 
