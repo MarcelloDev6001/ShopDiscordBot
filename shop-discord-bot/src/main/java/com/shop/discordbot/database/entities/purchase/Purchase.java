@@ -93,10 +93,10 @@ public class Purchase {
             return;
         }
         setStatus(PurchaseStatus.COMPLETED);
-        update();
+        updateOnFirestore();
     }
 
-    public PurchaseUpdateStatus update()
+    public PurchaseUpdateStatus updateOnFirestore()
     {
         try {
             FirebaseManager.updatePurchase(this.id, this);

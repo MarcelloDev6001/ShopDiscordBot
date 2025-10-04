@@ -1,6 +1,11 @@
 package com.shop.discordbot.database.entities.guild;
 
+import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.purchase.Purchase;
+import com.shop.discordbot.database.entities.purchase.PurchaseUpdateStatus;
+import com.shop.discordbot.database.entities.shop.CategoryAddStatus;
+import com.shop.discordbot.database.entities.shop.CategoryDeleteStatus;
+import com.shop.discordbot.database.entities.shop.CategoryUpdateStatus;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 
 import java.util.ArrayList;
@@ -28,6 +33,83 @@ public class Guild {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public ShopCategory getCategory(String name)
+    {
+        for (ShopCategory category : getCategories())
+        {
+            if (category.getName().equals(name))
+            {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    public CategoryAddStatus addCategory(ShopCategory category)
+    {
+        try {
+            categories.add(category);
+            updateOnFirestore();
+            return CategoryAddStatus.SUCCESS;
+        } catch (Exception e) {
+            return CategoryAddStatus.FAIL;
+        }
+    }
+
+    public CategoryAddStatus addCategories(List<ShopCategory> categories)
+    {
+        try {
+            this.categories.addAll(categories);
+            updateOnFirestore();
+            return CategoryAddStatus.SUCCESS;
+        } catch (Exception e) {
+            return CategoryAddStatus.FAIL;
+        }
+    }
+
+    public CategoryUpdateStatus updateCategory(String name, ShopCategory newCategory)
+    {
+        try {
+            for (ShopCategory category : categories)
+            {
+                if (category.getName() == name)
+                {
+                    categories.set(categories.indexOf(category), newCategory);
+                    updateOnFirestore();
+                    return CategoryUpdateStatus.SUCCESS;
+                }
+            }
+            return CategoryUpdateStatus.NOT_FOUND;
+        } catch (Exception _) {
+            return CategoryUpdateStatus.FAIL;
+        }
+    }
+
+    public CategoryDeleteStatus deleteCategory(String categoryName)
+    {
+        try {
+            for (ShopCategory category : categories)
+            {
+                if (category.getName().equals(categoryName))
+                {
+                    categories.remove(category);
+                    updateOnFirestore();
+                    return CategoryDeleteStatus.SUCCESS;
+                }
+            }
+            return CategoryDeleteStatus.NOT_FOUND;
+        } catch (Exception _) {
+            return CategoryDeleteStatus.FAIL;
+        }
+    }
+
+    public void updateOnFirestore()
+    {
+        try {
+            FirebaseManager.updateGuild(this.id, this);
+        } catch (Exception _) {}
     }
 
     public List<ShopCategory> getCategories() {
