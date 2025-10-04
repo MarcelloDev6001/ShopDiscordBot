@@ -9,13 +9,10 @@ import com.shop.discordbot.database.entities.purchase.exceptions.PurchaseNotConf
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 import net.dv8tion.jda.api.entities.Guild;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Purchase {
-    private long id = 0L;
+    private String id = "";
     private String title = "";
     private long buyerID = 0L;
     private long sellerGuildOwnerID = 0L;
@@ -23,9 +20,10 @@ public class Purchase {
     private List<PurchaseItem> items = new ArrayList<>();
     private Timestamp purchaseDate = null;
 
-    public Purchase(long id, long buyerID, Guild guild, List<Long> itemsIDs, boolean needConfirmation)
+    public Purchase(long buyerID, Guild guild, List<Long> itemsIDs, boolean needConfirmation) throws ItemNotFound
     {
-        this.id = id;
+        this.id = UUID.randomUUID().toString();
+
         this.buyerID = buyerID;
         this.sellerGuildOwnerID = guild.getOwnerIdLong();
 
@@ -62,12 +60,8 @@ public class Purchase {
         updateOnFirestore();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public List<PurchaseItem> getItems() {

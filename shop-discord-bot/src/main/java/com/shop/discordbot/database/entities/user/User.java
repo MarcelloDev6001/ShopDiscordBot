@@ -1,6 +1,9 @@
 package com.shop.discordbot.database.entities.user;
 
 import com.shop.discordbot.database.FirebaseManager;
+import com.shop.discordbot.database.entities.purchase.Purchase;
+import com.shop.discordbot.database.entities.purchase.exceptions.ItemNotFound;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +53,11 @@ public class User {
         }
     }
 
-    public void finishCart(long guildOwnerId)
+    public Purchase finishCart(Guild guild, boolean needsConfirmation) throws ItemNotFound
     {
-
+        Purchase purchase = new Purchase(getId(), guild, getCartItemsIDs(), needsConfirmation);
+        clearCart();
+        return purchase;
     }
 
     public void clearCart()

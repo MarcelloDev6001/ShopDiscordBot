@@ -108,7 +108,7 @@ public class FirebaseManager {
     }
 
     // ---------- Purchases wrappers ----------
-    public static Purchase getPurchaseFromDatabase(long id) {
+    public static Purchase getPurchaseFromDatabase(String id) {
         return getEntity(Tables.PURCHASES_TABLE, String.valueOf(id), Purchase.class);
     }
 
@@ -116,11 +116,7 @@ public class FirebaseManager {
         addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(purchase.getId()), purchase);
     }
 
-    public static Purchase getOrCreatePurchase(long id, long buyerId, long sellerGuildOwnerId) {
-        return getOrCreateEntity(Tables.GUILDS_TABLE, String.valueOf(id), Purchase.class, Purchase.getDefault(id, buyerId, sellerGuildOwnerId));
-    }
-
-    public static void updatePurchase(long id, Purchase purchase) {
+    public static void updatePurchase(String id, Purchase purchase) {
         addOrUpdateEntity(Tables.PURCHASES_TABLE, String.valueOf(id), purchase);
     }
 
