@@ -109,7 +109,7 @@ public class FirebaseManager {
 
     // ---------- Purchases wrappers ----------
     public static Purchase getPurchaseFromDatabase(String id) {
-        return getEntity(Tables.PURCHASES_TABLE, String.valueOf(id), Purchase.class);
+        return getEntity(Tables.PURCHASES_TABLE, id, Purchase.class);
     }
 
     public static void addPurchaseToDatabase(Purchase purchase) {

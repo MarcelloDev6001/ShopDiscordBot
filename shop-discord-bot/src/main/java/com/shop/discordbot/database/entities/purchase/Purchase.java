@@ -10,6 +10,8 @@ import com.shop.discordbot.database.entities.shop.ShopCategory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Purchase {
     private String id = "";
@@ -20,44 +22,32 @@ public class Purchase {
     private List<PurchaseItem> items = new ArrayList<>();
     private Timestamp purchaseDate = null;
 
-    public Purchase(long buyerID, Guild guild, List<Long> itemsIDs, boolean needConfirmation) throws ItemNotFound
-    {
+    // thanks connorpark24 (and the coders of the discussion) for optimizing this function here
+    // https://github.com/orgs/community/discussions/175829#discussioncomment-14593964
+    public Purchase(long buyerID, Guild guild, List<Long> itemIDs, boolean needConfirmation) throws ItemNotFound {
         this.id = UUID.randomUUID().toString();
-
         this.buyerID = buyerID;
         this.sellerGuildOwnerID = guild.getOwnerIdLong();
-
-        List<Long> itemsFound = new ArrayList<>();
-
-        if (needConfirmation) { status = PurchaseStatus.NEED_CONFIRMATION; }
-
-        for (ShopCategory category : FirebaseManager.getOrCreateGuild(guild.getIdLong()).getCategories())
-        {
-            for (PurchaseItem item : category.getItems())
-            {
-                if (itemsIDs.contains(item.getId())) {
-                    itemsFound.add(item.getId());
-                }
-            }
-        }
-
-        // we can use any type of sort here, what matter is they are equals and on the same order to check
-        itemsIDs.sort(Comparator.reverseOrder());
-        itemsFound.sort(Comparator.reverseOrder());
-
-        for (int i = 0; i < itemsIDs.size(); i++)
-        {
-            if (!itemsIDs.get(i).equals(itemsFound.get(i)))
-            {
-                throw new ItemNotFound(
-                        itemsIDs.get(i),
-                        "Item not found: " + itemsIDs.get(i)
-                );
-            }
-        }
-
         this.purchaseDate = Timestamp.now();
-        updateOnFirestore();
+
+        if (needConfirmation) {
+            status = PurchaseStatus.NEED_CONFIRMATION;
+        }
+
+        // Flatten all items in all categories for this guild into a single map for quick lookup
+        Map<Long, PurchaseItem> allItems = FirebaseManager.getOrCreateGuild(guild.getIdLong())
+                .getCategories().stream()
+                .flatMap(cat -> cat.getItems().stream())
+                .collect(Collectors.toMap(PurchaseItem::getId, Function.identity()));
+
+        // Verify that all requested item IDs exist
+        for (Long id : itemIDs) {
+            if (!allItems.containsKey(id)) {
+                throw new ItemNotFound(id, "Item not found: " + id);
+            }
+        }
+
+        createOnFirestore();
     }
 
     public String getId() {
@@ -131,6 +121,8 @@ public class Purchase {
     public PurchaseCreateStatus createOnFirestore()
     {
         Purchase purchase = FirebaseManager.getPurchaseFromDatabase(this.id);
+        System.out.println(purchase);
+        System.out.println(purchase != null);
         if (purchase != null)
         {
             return PurchaseCreateStatus.ALREADY_EXIST;
