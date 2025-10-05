@@ -23,8 +23,8 @@ public abstract class DeleteCategoryModal implements Modal {
             );
         }
 
-        modalObject.addTextInput("category_selected", "Category name", "Category name", TextInputStyle.SHORT, true);
-        modalObject.addTextInput("confirm_delete", "Confirm Delete", "Type the category name again", TextInputStyle.SHORT, true);
+        modalObject.addTextInput("category_selected", "Category name", "Category name", TextInputStyle.SHORT, true, 1, 50);
+        modalObject.addTextInput("confirm_delete", "Confirm Delete", "Type the category name again", TextInputStyle.SHORT, true, 1, 50);
         return modalObject.build();
     }
 }

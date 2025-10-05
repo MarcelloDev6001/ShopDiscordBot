@@ -24,9 +24,9 @@ public abstract class UpdateCategoryModal implements Modal {
             );
         }
 
-        modalObject.addTextInput("category_selected", "Category name", "Category name", TextInputStyle.SHORT, true);
-        modalObject.addTextInput("name_input", "New name", "My new category", TextInputStyle.SHORT, true);
-        modalObject.addTextInput("description_input", "new description", "A category of X stuffs", TextInputStyle.PARAGRAPH, true);
+        modalObject.addTextInput("category_selected", "Category name", "Category name", TextInputStyle.SHORT, true, 1, 50);
+        modalObject.addTextInput("name_input", "New name", "My new category", TextInputStyle.SHORT, true, 1, 50);
+        modalObject.addTextInput("description_input", "new description", "A category of X stuffs", TextInputStyle.PARAGRAPH, true, 1, 512);
         return modalObject.build();
     }
 }

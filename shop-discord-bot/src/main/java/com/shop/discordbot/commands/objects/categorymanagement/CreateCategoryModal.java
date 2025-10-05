@@ -9,8 +9,8 @@ public abstract class CreateCategoryModal implements Modal {
     public static Modal create(String id, ModalObjectOnCompleteInteraction onCompleteInteraction)
     {
         ModalObject modalObject = new ModalObject(id, "Creating Category:", onCompleteInteraction);
-        modalObject.addTextInput("name_input", "Name", "My new category", TextInputStyle.SHORT, true);
-        modalObject.addTextInput("description_input", "Description", "A category of X stuffs", TextInputStyle.PARAGRAPH, true);
+        modalObject.addTextInput("name_input", "Name", "My new category", TextInputStyle.SHORT, true, 1, 50);
+        modalObject.addTextInput("description_input", "Description", "A category of X stuffs", TextInputStyle.PARAGRAPH, true, 1, 512);
         return modalObject.build();
     }
 }
