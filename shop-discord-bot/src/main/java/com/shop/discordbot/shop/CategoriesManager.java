@@ -38,6 +38,24 @@ public class CategoriesManager {
         throw new CategoryNotFound("Category " + categoryName + " not found!");
     }
 
+    public static void deleteCategoryOfGuild(Guild guild, String categoryName)
+    {
+        com.shop.discordbot.database.entities.guild.Guild dbGuild = FirebaseManager.getOrCreateGuild(guild.getIdLong());
+        List<ShopCategory> categories = dbGuild.getCategories();
+
+        for (ShopCategory category : categories)
+        {
+            if (category.getName().equals(categoryName))
+            {
+                categories.remove(category);
+                dbGuild.updateOnFirestore();
+                return;
+            }
+        }
+
+        throw new CategoryNotFound("Category " + categoryName + " not found!");
+    }
+
     public static void createCategoryForGuild(Guild guild, String name, String description) throws CategoryAlreadyExist
     {
         com.shop.discordbot.database.entities.guild.Guild dbGuild = FirebaseManager.getOrCreateGuild(guild.getIdLong());

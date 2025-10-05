@@ -2,6 +2,7 @@ package com.shop.discordbot.commands.category;
 
 import com.shop.discordbot.commands.Command;
 import com.shop.discordbot.commands.objects.categorymanagement.CreateCategoryModal;
+import com.shop.discordbot.commands.objects.categorymanagement.DeleteCategoryModal;
 import com.shop.discordbot.commands.objects.categorymanagement.UpdateCategoryModal;
 import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.guild.Guild;
@@ -71,7 +72,6 @@ public class CategoryManagementCommand extends Command {
             } catch (CategoryNotFound e) {
                 interaction.reply("Error: category `" + categoryName + "` not found!").setEphemeral(true).queue();
             }
-            interaction.reply("Category `" + name + "` updated successfully!").setEphemeral(true).queue();
         } catch (Exception e) {
             interaction.reply("Unknown Error: " + e).setEphemeral(true).queue();
         }
@@ -91,7 +91,42 @@ public class CategoryManagementCommand extends Command {
         ).queue();
     }
 
-    private void deleteCategory(ButtonInteraction interaction, User user) {}
+    private void handleDeleteCategory(ModalInteraction interaction, User user)
+    {
+        try {
+            String categoryName = interaction.getValue("category_selected").getAsString();
+            String confirmDelete = interaction.getValue("confirm_delete").getAsString();
+
+            if (!categoryName.equals(confirmDelete))
+            {
+                interaction.reply("Error: the category name input and confirmation input are not the same").setEphemeral(true).queue();
+                return;
+            }
+
+            try {
+                CategoriesManager.deleteCategoryOfGuild(interaction.getGuild(), categoryName);
+                interaction.reply("Category `" + categoryName + "` deleted successfully!").setEphemeral(true).queue();
+            } catch (CategoryNotFound e) {
+                interaction.reply("Error: category `" + categoryName + "` not found!").setEphemeral(true).queue();
+            }
+        } catch (Exception e) {
+            interaction.reply("Unknown Error: " + e).setEphemeral(true).queue();
+        }
+    }
+
+    private void deleteCategory(ButtonInteraction interaction, User user) {
+        if (CategoriesManager.getCategoriesOfGuild(interaction.getGuild()).isEmpty())
+        {
+            interaction.reply("Error: This Guild doesn't have any category!")
+                    .setEphemeral(true).queue();
+
+            return;
+        }
+        interaction.replyModal(
+                DeleteCategoryModal.create("delete_category_modal_" + interaction.getId(),
+                        CategoriesManager.getCategoriesOfGuild(interaction.getGuild()), this::handleDeleteCategory)
+        ).queue();
+    }
 
     @Override
     public void onCommandExecuted(SlashCommandInteraction interaction)
