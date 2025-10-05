@@ -25,8 +25,6 @@ public class App {
         try
         {
             JDA jda = JDABuilder.createLight(DiscordProperties.token, DiscordProperties.intents)
-                    .addEventListeners(new MessageReceivedListener())
-                    .addEventListeners(new SlashCommandInteractionListener())
                     .setActivity(Activity.watching("your messages"))
                     .build();
 
