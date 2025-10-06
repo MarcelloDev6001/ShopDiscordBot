@@ -1,6 +1,9 @@
 package com.shop.discordbot.shop;
 
 import com.shop.discordbot.database.FirebaseManager;
+import com.shop.discordbot.database.entities.shop.CategoryAddStatus;
+import com.shop.discordbot.database.entities.shop.CategoryDeleteStatus;
+import com.shop.discordbot.database.entities.shop.CategoryUpdateStatus;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 import com.shop.discordbot.shop.exceptions.CategoryAlreadyExist;
 import com.shop.discordbot.shop.exceptions.CategoryNotFound;
@@ -30,7 +33,7 @@ public class CategoriesManager {
                 category.setName(newCategoryName);
                 category.setDescription(newCategoryDescription);
 
-                dbGuild.updateOnFirestore();
+                dbGuild.updateCategory(categoryName, category);
                 return;
             }
         }
@@ -41,40 +44,33 @@ public class CategoriesManager {
     public static void deleteCategoryOfGuild(Guild guild, String categoryName)
     {
         com.shop.discordbot.database.entities.guild.Guild dbGuild = FirebaseManager.getOrCreateGuild(guild.getIdLong());
-        List<ShopCategory> categories = dbGuild.getCategories();
 
-        for (ShopCategory category : categories)
+        CategoryDeleteStatus status = dbGuild.deleteCategory(categoryName);
+        if (status == CategoryDeleteStatus.NOT_FOUND)
         {
-            if (category.getName().equals(categoryName))
-            {
-                categories.remove(category);
-                dbGuild.updateOnFirestore();
-                return;
-            }
+            throw new CategoryNotFound("Category " + categoryName + " not found!");
+        } else if (status == CategoryDeleteStatus.FAIL) {
+            throw new CategoryNotFound("Unknown error!");
         }
-
-        throw new CategoryNotFound("Category " + categoryName + " not found!");
     }
 
     public static void createCategoryForGuild(Guild guild, String name, String description) throws CategoryAlreadyExist
     {
         com.shop.discordbot.database.entities.guild.Guild dbGuild = FirebaseManager.getOrCreateGuild(guild.getIdLong());
-        List<ShopCategory> categories = dbGuild.getCategories();
-
-        for (ShopCategory category : categories)
-        {
-            if (category.getName().equals(name))
-            {
-                throw new CategoryAlreadyExist("Category " + name + " already exist!");
-            }
-        }
 
         ShopCategory newCategory = new ShopCategory();
         newCategory.setName(name);
         newCategory.setDescription(description);
         newCategory.setItems(new ArrayList<>());
-        categories.add(newCategory);
 
-        dbGuild.updateOnFirestore();
+        CategoryAddStatus status = dbGuild.addCategory(newCategory);
+        if (status == CategoryAddStatus.ALREADY_EXIST)
+        {
+            throw new CategoryAlreadyExist("Category " + name + " already exist!");
+        }
+        else if (status == CategoryAddStatus.FAIL)
+        {
+            throw new CategoryAlreadyExist("Unknown error!");
+        }
     }
 }

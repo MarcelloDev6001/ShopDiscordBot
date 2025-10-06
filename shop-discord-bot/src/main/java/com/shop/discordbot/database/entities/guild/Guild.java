@@ -50,6 +50,13 @@ public class Guild {
     public CategoryAddStatus addCategory(ShopCategory category)
     {
         try {
+            for (ShopCategory cat : getCategories())
+            {
+                if (cat.getName().equals(category.getName()))
+                {
+                    return CategoryAddStatus.ALREADY_EXIST;
+                }
+            }
             categories.add(category);
             updateOnFirestore();
             return CategoryAddStatus.SUCCESS;
