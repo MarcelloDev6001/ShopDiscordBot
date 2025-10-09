@@ -1,7 +1,7 @@
 package com.shop.discordbot.database.entities.purchase;
 
 public class PurchaseItem {
-    private long id = 0L;
+    private String id = "";
     private String name = "";
     private String details = "";
 
@@ -9,11 +9,13 @@ public class PurchaseItem {
     // ex: this item is a roblox account, then the secret details will be the username and the password for this roblox account
     private String secretDetails = "";
 
-    public long getId() {
+    public PurchaseItem() {}
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

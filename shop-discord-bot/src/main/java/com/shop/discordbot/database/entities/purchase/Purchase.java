@@ -35,7 +35,7 @@ public class Purchase {
         }
 
         // Flatten all items in all categories for this guild into a single map for quick lookup
-        Map<Long, PurchaseItem> allItems = FirebaseManager.getOrCreateGuild(guild.getIdLong())
+        Map<String, PurchaseItem> allItems = FirebaseManager.getOrCreateGuild(guild.getIdLong())
                 .getCategories().stream()
                 .flatMap(cat -> cat.getItems().stream())
                 .collect(Collectors.toMap(PurchaseItem::getId, Function.identity()));
@@ -67,7 +67,7 @@ public class Purchase {
         items.add(item);
     }
 
-    public void addItem(long id, String name, String details)
+    public void addItem(String id, String name, String details)
     {
         PurchaseItem newItem = new PurchaseItem();
         newItem.setId(id);

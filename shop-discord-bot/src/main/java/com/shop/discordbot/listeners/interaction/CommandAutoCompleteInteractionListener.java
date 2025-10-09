@@ -3,6 +3,7 @@ package com.shop.discordbot.listeners.interaction;
 import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.guild.Guild;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
@@ -16,8 +17,8 @@ public class CommandAutoCompleteInteractionListener extends ListenerAdapter {
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
         switch (event.getFocusedOption().getName().toLowerCase()) {
             case "category": {
-                if (!event.isGuildCommand()) {
-                    event.replyChoices(new Command.Choice("This command needs to be used on a guild!", "")).queue();
+                if (event.getChannelType() == ChannelType.PRIVATE) {
+                    event.replyChoices(new Command.Choice("This command needs to be used on a guild!", "null")).queue();
                     break;
                 }
 
@@ -28,7 +29,10 @@ public class CommandAutoCompleteInteractionListener extends ListenerAdapter {
 
                 for (ShopCategory category : dbGuild.getCategories())
                 {
-                    suggestions.add(category.getName());
+                    System.out.println(category.getName());
+                    if (!category.getName().isEmpty()) {
+                        suggestions.add(category.getName());
+                    }
                 }
 
                 List<Command.Choice> choices = suggestions.stream()
@@ -40,7 +44,7 @@ public class CommandAutoCompleteInteractionListener extends ListenerAdapter {
                 break;
             }
             default: {
-                event.replyChoices(new Command.Choice("Unknown Command!", "")).queue();
+                event.replyChoices(new Command.Choice("Unknown Option!", "null")).queue();
             }
         }
     }

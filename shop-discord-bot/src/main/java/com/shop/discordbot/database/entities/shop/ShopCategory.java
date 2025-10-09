@@ -4,6 +4,7 @@ import com.shop.discordbot.database.entities.purchase.PurchaseItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ShopCategory {
     private String name = "";
@@ -16,6 +17,21 @@ public class ShopCategory {
 
     public void setItems(List<PurchaseItem> items) {
         this.items = items;
+    }
+
+    public void addItem(PurchaseItem item)
+    {
+        items.add(item);
+    }
+
+    public void addItem(String name, String details, String secretDetails)
+    {
+        PurchaseItem item = new PurchaseItem();
+        item.setId(UUID.randomUUID().toString());
+        item.setName(name);
+        item.setDetails(details);
+        item.setSecretDetails(secretDetails);
+        items.add(item);
     }
 
     public String getName() {
