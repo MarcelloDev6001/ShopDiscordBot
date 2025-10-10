@@ -29,7 +29,6 @@ public class CommandAutoCompleteInteractionListener extends ListenerAdapter {
 
                 for (ShopCategory category : dbGuild.getCategories())
                 {
-                    System.out.println(category.getName());
                     if (!category.getName().isEmpty()) {
                         suggestions.add(category.getName());
                     }
