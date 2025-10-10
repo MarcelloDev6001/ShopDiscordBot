@@ -10,7 +10,7 @@ import java.util.List;
 
 public class User {
     private long id = 0L;
-    private List<Long> cartItemsIDs = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     public User() {}
 
@@ -29,41 +29,11 @@ public class User {
         this.id = id;
     }
 
-    public List<Long> getCartItemsIDs() {
-        return cartItemsIDs;
-    }
-
-    public void setCartItemsIDs(List<Long> cartItemsIDs) {
-        this.cartItemsIDs = cartItemsIDs;
-        updateToFirestore();
-    }
-
-    public void addItemToCart(Long itemID)
-    {
-        cartItemsIDs.add(itemID);
-        updateToFirestore();
-    }
-
-    public void removeItemOfCart(Long itemID)
-    {
-        if (cartItemsIDs.contains(itemID))
-        {
-            cartItemsIDs.remove(itemID);
-            updateToFirestore();
-        }
-    }
-
     public Purchase finishCart(Guild guild, boolean needsConfirmation) throws ItemNotFound
     {
         Purchase purchase = new Purchase(getId(), guild, getCartItemsIDs(), needsConfirmation);
         clearCart();
         return purchase;
-    }
-
-    public void clearCart()
-    {
-        cartItemsIDs.clear();
-        updateToFirestore();
     }
 
     public UpdateUserStatus updateToFirestore()
@@ -74,5 +44,51 @@ public class User {
         } catch (Exception e) {
             return UpdateUserStatus.FAIL;
         }
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public List<String> getCartItemsIDs() {
+        List<String> cartItemsIDs = new ArrayList<>();
+        for (CartItem item : getCartItems())
+        {
+            cartItemsIDs.add(item.getId());
+        }
+        return cartItemsIDs;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public void addItemToCart(String itemID, String itemName, long guildId)
+    {
+        CartItem newCartItem = new CartItem();
+        newCartItem.setId(itemID);
+        newCartItem.setName(itemName);
+        newCartItem.setGuildId(guildId);
+        cartItems.add(newCartItem);
+        updateToFirestore();
+    }
+
+    public void removeItemOfCart(String itemID)
+    {
+        for (CartItem item : getCartItems())
+        {
+            if (item.getId().equals(itemID))
+            {
+                cartItems.remove(item);
+                break;
+            }
+        }
+        updateToFirestore();
+    }
+
+    public void clearCart()
+    {
+        cartItems.clear();
+        updateToFirestore();
     }
 }

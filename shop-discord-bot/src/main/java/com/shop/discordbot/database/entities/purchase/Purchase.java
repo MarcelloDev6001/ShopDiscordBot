@@ -24,7 +24,7 @@ public class Purchase {
 
     // thanks connorpark24 (and the coders of the discussion) for optimizing this function here
     // https://github.com/orgs/community/discussions/175829#discussioncomment-14593964
-    public Purchase(long buyerID, Guild guild, List<Long> itemIDs, boolean needConfirmation) throws ItemNotFound {
+    public Purchase(long buyerID, Guild guild, List<String> itemIDs, boolean needConfirmation) throws ItemNotFound {
         this.id = UUID.randomUUID().toString();
         this.buyerID = buyerID;
         this.sellerGuildOwnerID = guild.getOwnerIdLong();
@@ -41,11 +41,19 @@ public class Purchase {
                 .collect(Collectors.toMap(PurchaseItem::getId, Function.identity()));
 
         // Verify that all requested item IDs exist
-        for (Long id : itemIDs) {
+        for (String id : itemIDs) {
             if (!allItems.containsKey(id)) {
                 throw new ItemNotFound(id, "Item not found: " + id);
             }
         }
+
+        List<PurchaseItem> purchaseItemsList = new ArrayList<>();
+
+        for (Map.Entry<String, PurchaseItem> entry : allItems.entrySet()) {
+            purchaseItemsList.add(entry.getValue());
+        }
+
+        this.setItems(purchaseItemsList);
 
         createOnFirestore();
     }

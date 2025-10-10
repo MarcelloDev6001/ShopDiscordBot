@@ -1,9 +1,9 @@
 package com.shop.discordbot.database.entities.purchase.exceptions;
 
 public class ItemNotFound extends RuntimeException {
-    public long itemId;
+    public String itemId;
 
-    public ItemNotFound(long itemId, String message) {
+    public ItemNotFound(String itemId, String message) {
         super(message);
         this.itemId = itemId;
     }
