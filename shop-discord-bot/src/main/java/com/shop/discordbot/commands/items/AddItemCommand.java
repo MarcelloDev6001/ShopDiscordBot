@@ -5,6 +5,7 @@ import com.shop.discordbot.commands.objects.additem.AddItemModal;
 import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.guild.Guild;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
+import com.shop.discordbot.settings.CategoriesSettings;
 import com.shop.discordbot.shop.CategoriesManager;
 import com.shop.discordbot.shop.exceptions.CategoryAlreadyExist;
 import net.dv8tion.jda.api.Permission;
@@ -42,9 +43,16 @@ public class AddItemCommand extends Command {
                     break;
                 }
             }
+
             if (categoryFound == null)
             {
                 interaction.getHook().sendMessage("Category not found.").setEphemeral(true).queue();
+                return;
+            }
+
+            if (categoryFound.getItems().size() >= CategoriesSettings.MAX_ITEMS)
+            {
+                interaction.getHook().sendMessage("You have reached the max items per category. (`" + CategoriesSettings.MAX_ITEMS + "`)").setEphemeral(true).queue();
                 return;
             }
 
