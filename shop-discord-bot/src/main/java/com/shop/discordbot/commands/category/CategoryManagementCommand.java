@@ -8,6 +8,7 @@ import com.shop.discordbot.database.FirebaseManager;
 import com.shop.discordbot.database.entities.guild.Guild;
 import com.shop.discordbot.database.entities.shop.ShopCategory;
 import com.shop.discordbot.messages.components.button.MessageButton;
+import com.shop.discordbot.settings.CategoriesSettings;
 import com.shop.discordbot.shop.CategoriesManager;
 import com.shop.discordbot.shop.exceptions.CategoryAlreadyExist;
 import com.shop.discordbot.shop.exceptions.CategoryNotFound;
@@ -47,9 +48,9 @@ public class CategoryManagementCommand extends Command {
     }
 
     private void createCategory(ButtonInteraction interaction, User user) {
-        if (CategoriesManager.getCategoriesOfGuild(interaction.getGuild()).size() >= CategoriesManager.maxCategoriesPerGuild)
+        if (CategoriesManager.getCategoriesOfGuild(interaction.getGuild()).size() >= CategoriesSettings.MAX_CATEGORIES_PER_GUILD)
         {
-            interaction.reply("Error: You passed the limit of categories per guild (" + Integer.toString(CategoriesManager.maxCategoriesPerGuild) + ")")
+            interaction.reply("Error: You passed the limit of categories per guild (" + Integer.toString(CategoriesSettings.MAX_CATEGORIES_PER_GUILD) + ")")
                     .setEphemeral(true).queue();
 
             return;

@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesManager {
-    public static final int maxCategoriesPerGuild = 10;
-
     public static List<ShopCategory> getCategoriesOfGuild(Guild guild)
     {
         com.shop.discordbot.database.entities.guild.Guild dbGuild = FirebaseManager.getOrCreateGuild(guild.getIdLong());
