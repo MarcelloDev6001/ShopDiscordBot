@@ -34,6 +34,18 @@ public class ShopCategory {
         items.add(item);
     }
 
+    public PurchaseItem getItem(String name)
+    {
+        for (PurchaseItem item : getItems())
+        {
+            if (item.getName().equals(name))
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public String getName() {
         return name;
     }
