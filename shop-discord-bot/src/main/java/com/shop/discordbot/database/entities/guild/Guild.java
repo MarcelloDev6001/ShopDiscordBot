@@ -81,7 +81,7 @@ public class Guild {
         try {
             for (ShopCategory category : categories)
             {
-                if (category.getName() == name)
+                if (category.getName().equals(name))
                 {
                     categories.set(categories.indexOf(category), newCategory);
                     updateOnFirestore();

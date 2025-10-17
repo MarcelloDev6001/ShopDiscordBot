@@ -115,7 +115,7 @@ public class CatalogueCommand extends Command {
             }
         }.run();
 
-        TriConsumer<StringSelectInteraction, User, List<String>> itemSelectHandler = (interaction1, userListTriConsumer, choicesTriConsumer) -> {
+        return (interaction1, userListTriConsumer, choicesTriConsumer) -> {
             interaction1.deferReply(true).queue();
 
             PurchaseItem item = category.getItem(choicesTriConsumer.getFirst());
@@ -141,7 +141,6 @@ public class CatalogueCommand extends Command {
             );
             interaction1.getHook().editOriginalComponents(ActionRow.of(addToCartButton.toComponentButton())).queue();
         };
-        return itemSelectHandler;
     }
 
     @Override
@@ -161,15 +160,15 @@ public class CatalogueCommand extends Command {
         }
 
         EmbedBuilder catalogueBuilder = new EmbedBuilder()
-                .setTitle("Catalogue of " + interaction.getGuild().getName())
+                .setTitle("Categories of " + interaction.getGuild().getName())
                 .setDescription("Here you can see all categories and items of this guild");
 
-        StringSelectMenu categoriesMenu = getStringSelectMenu(interaction, guildCategories);
+        StringSelectMenu categoriesMenu = getStringSelectMenu(interaction, "category_select", guildCategories);
         interaction.reply("").setEmbeds(catalogueBuilder.build()).setActionRow(categoriesMenu.toSelectMenu()).queue();
     }
 
     @NotNull
-    private StringSelectMenu getStringSelectMenu(SlashCommandInteraction interaction, List<ShopCategory> guildCategories) {
+    private StringSelectMenu getStringSelectMenu(SlashCommandInteraction interaction, String prefixID, List<ShopCategory> guildCategories) {
         List<DropdownMenuOption> stringOptions = new ArrayList<>();
         for (ShopCategory category : guildCategories)
         {
@@ -181,6 +180,6 @@ public class CatalogueCommand extends Command {
             ));
         }
 
-        return new StringSelectMenu("categories_catalogue_" + interaction.getId(), "Select a Category", stringOptions, 1, 1);
+        return new StringSelectMenu(prefixID + "_" + interaction.getId(), "Select a Category", stringOptions, 1, 1);
     }
 }
